@@ -1,0 +1,118 @@
+﻿@page
+@model MakerChecker.Pages.Posts.IndexModel
+@{
+    ViewData["Title"] = "Index";
+}
+
+@Html.AntiForgeryToken()
+
+<div class="row">
+    <div class="col-12">
+        <h2>Approved Posts</h2>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Title</th>
+                <th>Short Desc</th>
+                <th>Desc</th>
+                <th>Maker</th>
+                <th>Checker</th>
+                <th>Actions</th>
+            </tr>
+            @foreach (var post in Model.Posts)
+            {
+                <tr>
+                    <td>@post.Title</td>
+                    <td>@post.ShortDescription</td>
+                    <td>@post.Description</td>
+                    <td>@post.InsertedBy</td>
+                    <td>@post.ApprovedBy</td>
+                    <td>
+                        <button type="button" class="btn btn-info btn-sm">View</button>
+                        <button type="button" class="btn btn-primary btn-sm">Edit</button>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+
+    <div class="col-12">
+        <h2>Post Waiting for approval</h2>
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th>Title</th>
+                <th>Short Desc</th>
+                <th>Desc</th>
+                <th>Creator</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            @foreach (var post in Model.StagingPosts)
+            {
+                <tr>
+                    <td>@post.Title</td>
+                    <td>@post.ShortDescription</td>
+                    <td>@post.Description</td>
+                    <td>@post.InsertedBy</td>
+                    <td>@post.InsertedTime.ToLocalTime()</td>
+                    <td>
+                        @if (post.PostId == null)
+                        {
+                            <span>Created</span>
+                        }
+                        else
+                        {
+                            <span>Modified</span>
+                        }
+                    </td>
+                    <td>
+                        @if (post.PostId == null)
+                        {
+                            <button type="button" class="btn btn-info btn-sm">View</button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-info btn-sm">Compare</button>
+                        }
+                        <button type="button" class="btn btn-success btn-sm" onclick="approvePost('@post.Id')">Approve</button>
+                        <button type="button" class="btn btn-warning btn-sm">Decline</button>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        function approvePost(id) {
+            $.ajax({
+                type: "POST",
+                dataType: 'json',
+                url: '@Url.Page("Index", "ApprovePost")',
+                traditional: true,
+                headers: { "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val() },
+                data: {
+                    id: id
+                },
+                success: function (result) {
+                    if (result == "Success") {
+                        Swal.fire({
+                            title: '<strong>Success</strong>',
+                            icon: 'success',
+                            html: '<strong>' + result + '</strong>',
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            title: '<strong>Error</strong>',
+                            icon: 'error',
+                            html: '<strong>' + result + '</strong>',
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+}

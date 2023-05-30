@@ -1,0 +1,37 @@
+﻿@page
+@model MakerChecker.Pages.Posts.CreateModel
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Hello from post create page</h2>
+<form method="post" asp-action="Create" asp-antiforgery="true">
+    <div class="form-group">
+        <label asp-for="PostModel.Title"></label>
+        <input asp-for="PostModel.Title" class="form-control">
+        <span asp-validation-for="PostModel.Title" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PostModel.ShortDescription"></label>
+        <input asp-for="PostModel.ShortDescription" class="form-control">
+        <span asp-validation-for="PostModel.ShortDescription" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PostModel.Description"></label>
+        <textarea asp-for="PostModel.Description" class="form-control" rows="6"></textarea>
+        <span asp-validation-for="PostModel.Description" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PostModel.Tags"></label>
+        <input asp-for="PostModel.Tags" class="form-control">
+        <span asp-validation-for="PostModel.Tags" class="text-danger"></span>
+    </div>
+
+    <input type="submit" class="btn btn-primary mt-2" value="Save" />
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
