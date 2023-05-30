@@ -38,6 +38,7 @@ public class CreateModel : PageModel
             Tags = PostModel.Tags,
             InsertedTime = DateTime.UtcNow,
             StageStatus = StageStatus.NeedApproval,
+            CreateStatus = CreateStatus.Created,
             InsertedBy = _currentUserService.GetCurrentUserEmail()
         });
         await _context.SaveChangesAsync();

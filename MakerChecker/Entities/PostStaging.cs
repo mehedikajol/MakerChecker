@@ -10,6 +10,7 @@ public class PostStaging : StagingEntity
     public string ShortDescription { get; set; }
     public string Tags { get; set; }
     public Guid? PostId { get; set; }
-    public string RejectReason { get; set; }
+    public string? RejectReason { get; set; }
     public StageStatus StageStatus { get; set; }
+    public CreateStatus CreateStatus { get; set; }
 }

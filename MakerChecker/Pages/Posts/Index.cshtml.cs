@@ -61,6 +61,7 @@ public class IndexModel : PageModel
                 InsertedTime = post.InsertedTime,
                 ShortDescription = post.ShortDescription,
                 Tags = post.Tags,
+                CreateStatus = post.CreateStatus
             });
         }
         return Page();
@@ -121,4 +122,5 @@ public class StagingPost
     public Guid? PostId { get; set; }
     public string InsertedBy { get; set; }
     public DateTime InsertedTime { get; set; }
+    public CreateStatus CreateStatus { get; set; }
 }

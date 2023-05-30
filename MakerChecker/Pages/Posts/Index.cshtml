@@ -1,4 +1,5 @@
 ﻿@page
+@using MakerChecker.Entities.Enums;
 @model MakerChecker.Pages.Posts.IndexModel
 @{
     ViewData["Title"] = "Index";
@@ -55,18 +56,9 @@
                     <td>@post.Description</td>
                     <td>@post.InsertedBy</td>
                     <td>@post.InsertedTime.ToLocalTime()</td>
+                    <td>@post.CreateStatus.ToString()</td>
                     <td>
-                        @if (post.PostId == null)
-                        {
-                            <span>Created</span>
-                        }
-                        else
-                        {
-                            <span>Modified</span>
-                        }
-                    </td>
-                    <td>
-                        @if (post.PostId == null)
+                        @if (post.CreateStatus == CreateStatus.Created)
                         {
                             <button type="button" class="btn btn-info btn-sm">View</button>
                         }
