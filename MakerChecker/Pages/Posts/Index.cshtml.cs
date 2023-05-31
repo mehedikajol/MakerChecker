@@ -1,6 +1,7 @@
 using MakerChecker.Data;
 using MakerChecker.Entities.Enums;
 using MakerChecker.Services.CurrentUserServices;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -34,6 +35,9 @@ public class IndexModel : PageModel
         var posts = await _context.Posts.ToListAsync();
         foreach (var post in posts)
         {
+            var item = post.Adapt<Post>();
+            Posts.Add(item);
+            /*
             Posts.Add(new Post
             {
                 Title = post.Title,
@@ -44,6 +48,7 @@ public class IndexModel : PageModel
                 InsertedBy = post.InsertedBy,
                 ApprovedBy = post.ApprovedBy
             });
+            */
         }
 
         var stagedposts = await _context.PostStagings
@@ -51,6 +56,9 @@ public class IndexModel : PageModel
             .ToListAsync();
         foreach (var post in stagedposts)
         {
+            var stagingPost = post.Adapt<StagingPost>();
+            StagingPosts.Add(stagingPost);
+            /*
             StagingPosts.Add(new StagingPost
             {
                 Id = post.Id,
@@ -63,6 +71,7 @@ public class IndexModel : PageModel
                 Tags = post.Tags,
                 CreateStatus = post.CreateStatus
             });
+            */
         }
         return Page();
     }
@@ -73,6 +82,11 @@ public class IndexModel : PageModel
         {
             var stagingPost = await _context.PostStagings.FindAsync(id);
 
+            var post = stagingPost.Adapt<Entities.Post>();
+            post.ApprovedBy = _currentUserService.GetCurrentUserEmail();
+            post.ApprovedTime = DateTime.UtcNow;
+
+            /*
             Entities.Post post = new Entities.Post
             {
                 Title = stagingPost.Title,
@@ -84,6 +98,7 @@ public class IndexModel : PageModel
                 InsertedTime = stagingPost.InsertedTime,
                 ApprovedTime = DateTime.UtcNow,
             };
+            */
 
             await _context.Posts.AddAsync(post);
 

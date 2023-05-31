@@ -2,6 +2,7 @@ using MakerChecker.Data;
 using MakerChecker.Entities;
 using MakerChecker.Entities.Enums;
 using MakerChecker.Services.CurrentUserServices;
+using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -30,6 +31,15 @@ public class CreateModel : PageModel
 
     public async Task<IActionResult> OnPostAsync()
     {
+        var postStaging = PostModel.Adapt<PostStaging>();
+        postStaging.InsertedTime = DateTime.UtcNow;
+        postStaging.StageStatus = StageStatus.NeedApproval;
+        postStaging.CreateStatus = CreateStatus.Created;
+        postStaging.InsertedBy = _currentUserService.GetCurrentUserEmail();
+
+        await _context.PostStagings.AddAsync(postStaging);
+
+        /*
         await _context.PostStagings.AddAsync(new PostStaging
         {
             Title = PostModel.Title,
@@ -41,6 +51,7 @@ public class CreateModel : PageModel
             CreateStatus = CreateStatus.Created,
             InsertedBy = _currentUserService.GetCurrentUserEmail()
         });
+        */
         await _context.SaveChangesAsync();
         return RedirectToPage(nameof(Index));
     }
